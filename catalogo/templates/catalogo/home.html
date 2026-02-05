@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Catálogo Cochabamba</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --gradient-start: #0f172a;
+            --gradient-end: #1e293b;
+            --primary-blue: #60a5fa;
+            --primary-purple: #c084fc;
+            --primary-pink: #f472b6;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --card-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: white;
+            position: fixed;
+            width: 100%;
+        }
+
+        /* Contenedor estilo móvil fullscreen */
+        .mobile-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        /* Header fijo para móvil */
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .back-btn {
+            background: rgba(51, 65, 85, 0.5);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+            background: rgba(51, 65, 85, 0.7);
+        }
+
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-purple), var(--primary-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 10px;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            padding: 80px 20px 100px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Header del contenido */
+        .content-header {
+            text-align: center;
+            padding: 20px 0 30px;
+        }
+
+        .greeting {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-purple), var(--primary-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 20px rgba(96, 165, 250, 0.3);
+        }
+
+        /* Lista de categorías con círculos - Optimizada para móvil */
+        .category-list-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding-bottom: 20px;
+        }
+
+        /* Tarjeta de categoría con círculo - Manteniendo tu diseño original */
+        .category-item-mobile {
+            display: block;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            text-align: center;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .category-item-mobile:active .category-circle-mobile {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+        }
+
+        /* Círculo de categoría - Manteniendo tu diseño */
+        .category-circle-mobile {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 4px solid var(--border-color);
+            background: var(--gradient-end);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category-item-mobile:hover .category-circle-mobile {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .category-circle-mobile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* Nombre de categoría */
+        .category-name-mobile {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 200px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* Badge para productos nuevos */
+        .new-badge-circle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ef4444, #f472b6);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Contador de productos */
+        .product-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(51, 65, 85, 0.3);
+            padding: 4px 12px;
+            border-radius: 15px;
+            margin-top: 8px;
+        }
+
+        /* Footer fijo */
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(51, 65, 85, 0.5);
+            z-index: 100;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        /* Indicador de scroll */
+        .scroll-hint {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: rgba(51, 65, 85, 0.5);
+            backdrop-filter: blur(10px);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            animation: float 2s infinite ease-in-out;
+            z-index: 99;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Estado vacío */
+        .empty-state {
+            height: 50vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+            color: var(--text-muted);
+        }
+
+        /* Animaciones suaves */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-item-mobile {
+            animation: slideIn 0.5s ease-out backwards;
+        }
+
+        /* Efecto de brillo al tocar */
+        /* .category-item-mobile::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: left 0.5s ease;
+            z-index: 1;
+            border-radius: 50%;
+        }
+
+        .category-item-mobile:active::after {
+            left: 100%;
+        }*/
+
+        /* Adaptaciones para diferentes tamaños */
+        @media (max-height: 700px) {
+            .category-circle-mobile {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .main-content {
+                padding: 70px 20px 90px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .category-circle-mobile {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .category-name-mobile {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Prevenir zoom en iOS */
+        input, textarea {
+            font-size: 16px;
+        }
+
+        /* Scroll personalizado oculto */
+        .mobile-container::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        /* Asegurar que las imágenes siempre sean visibles */
+        img {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+
+        /* Optimización de rendimiento */
+        .category-circle-mobile {
+            will-change: transform;
+        }
+
+        /* Efecto de carga suave */
+        .category-circle-mobile img {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Estilo para cuando hay muchas categorías */
+        .category-list-mobile {
+            padding-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <!-- Header fijo -->
+        <div class="mobile-header">
+            <a href="{% url 'catalogo:home' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            
+            <div class="header-title">Catálogo</div>
+            
+            <div style="width: 45px;"></div> <!-- Espaciador -->
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="greeting">¡Bienvenido a tu catálogo!</div>
+                <h1 class="main-title">Elige tu Categoría</h1>
+            </div>
+
+            <!-- Lista de categorías con círculos -->
+            <div class="category-list-mobile">
+                {% for categoria in categorias %}
+                <a href="{{ categoria.get_absolute_url }}" 
+                   class="category-item-mobile"
+                   style="animation-delay: {{ forloop.counter0|add:'1' }}00ms">
+                    
+                    <div class="category-circle-mobile">
+                        {% if categoria.nuevo %}
+                        <div class="new-badge-circle">N</div>
+                        {% endif %}
+                        
+                        {% if categoria.imagen %}
+                            <img src="{{ categoria.imagen.url }}" 
+                                 alt="{{ categoria.nombre }}"
+                                 loading="lazy"
+                                 onload="this.style.opacity='1'">
+                        {% else %}
+                            <img src="https://via.placeholder.com/140/1e293b/ffffff?text={{ categoria.nombre|slice:':1'|upper }}" 
+                                 alt="{{ categoria.nombre }}">
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <div class="category-name-mobile">{{ categoria.nombre }}</div>
+                        
+                        {% if categoria.descripcion %}
+                        <div class="category-description">
+                            {{ categoria.descripcion|truncatechars:50 }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if categoria.producto_count %}
+                        <div class="product-count">
+                            <i class="fas fa-box"></i>
+                            <span>{{ categoria.producto_count }} productos</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </a>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-folder-open empty-icon"></i>
+                    <h3 style="color: var(--text-muted); margin-bottom: 10px;">
+                        No hay categorías disponibles
+                    </h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        ¡Pronto tendremos novedades para ti!
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Indicador de scroll -->
+        <div class="scroll-hint">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <!-- Footer fijo -->
+        <div class="mobile-footer">
+            <p class="footer-text">
+                <i class="fas fa-map-marker-alt" style="color: var(--primary-blue); margin-right: 5px;"></i>
+                Cochabamba, Bolivia · Desliza para ver más
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Prevenir zoom con doble toque
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, { passive: false });
+
+        // Controlar visibilidad del indicador de scroll
+        const scrollHint = document.querySelector('.scroll-hint');
+        const container = document.querySelector('.mobile-container');
+        
+        container.addEventListener('scroll', function() {
+            if (container.scrollTop > 100) {
+                scrollHint.style.opacity = '0';
+                scrollHint.style.pointerEvents = 'none';
+            } else {
+                scrollHint.style.opacity = '1';
+                scrollHint.style.pointerEvents = 'auto';
+            }
+        });
+
+        // Click en indicador para hacer scroll
+        scrollHint.addEventListener('click', function() {
+            container.scrollTo({
+                top: 300,
+                behavior: 'smooth'
+            });
+        });
+
+        // Efecto táctil en categorías
+        document.querySelectorAll('.category-item-mobile').forEach(item => {
+            item.addEventListener('touchstart', function() {
+                this.style.opacity = '0.8';
+                // Vibración sutil si está disponible
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            });
+            
+            item.addEventListener('touchend', function() {
+                this.style.opacity = '1';
+            });
+        });
+
+        // Prevenir bounce effect en iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.documentElement.style.height = '100%';
+            
+            // Asegurar que el contenido no haga bounce
+            let startY;
+            container.addEventListener('touchstart', function(e) {
+                startY = e.touches[0].clientY;
+            });
+            
+            container.addEventListener('touchmove', function(e) {
+                const currentY = e.touches[0].clientY;
+                // Prevenir scroll cuando está en top o bottom
+                if ((container.scrollTop === 0 && currentY > startY) || 
+                    (container.scrollTop + container.clientHeight >= container.scrollHeight && currentY < startY)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
+        // Cargar imágenes con prioridad
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                // Asegurar que las imágenes se muestren inmediatamente
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+                
+                // Si una imagen falla, cargar placeholder
+                img.onerror = function() {
+                    this.src = 'https://via.placeholder.com/140/1e293b/ffffff?text=✓';
+                    this.onerror = null; // Prevenir loops infinitos
+                };
+            });
+        });
+
+        // Detectar si está en TikTok WebView
+        const isTikTok = navigator.userAgent.includes('TikTok');
+        if (isTikTok) {
+            // Optimizaciones específicas para TikTok
+            document.querySelector('.main-title').style.fontSize = '2rem';
+        }
+
+        // Mejorar rendimiento en scroll
+        let ticking = false;
+        container.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    // Aquí podrías agregar efectos parallax si quieres
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Asegurar que todas las imágenes sean visibles
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && 
+                    (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                    const target = mutation.target;
+                    if (target.tagName === 'IMG') {
+                        target.style.opacity = '1';
+                        target.style.visibility = 'visible';
+                        target.style.display = 'block';
+                    }
+                }
+            });
+        });
+
+        // Observar cambios en todas las imágenes
+        document.querySelectorAll('img').forEach(img => {
+            observer.observe(img, { 
+                attributes: true, 
+                attributeFilter: ['style', 'class'] 
+            });
+        });
+    </script>
+
+</body>
+</html>
