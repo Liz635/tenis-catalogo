@@ -3,17 +3,21 @@ Django settings for core project.
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 import cloudinary
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@ld#usxfjc7%(pcd-(f6*6t)1i=0(=3oovv-^1v9x9qhmn+da+"
+#SECRET_KEY = "django-insecure-@ld#usxfjc7%(pcd-(f6*6t)1i=0(=3oovv-^1v9x9qhmn+da+"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -103,9 +107,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dxojzbvfe',
-    'API_KEY': '359244362553411',
-    'API_SECRET': 'Azyk-kn7BS-PugLKwQN_HO4KkJU'
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET')
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
