@@ -134,7 +134,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'Azyk-kn7BS-PugLKwQN_HO4KkJU'
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'catalogo.storage.CloudinaryStorage'
 
 # Configuración explícita de Cloudinary
 cloudinary.config(
